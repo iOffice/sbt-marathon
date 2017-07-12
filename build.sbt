@@ -3,7 +3,7 @@ import Publishing._
 
 /* The base, minimal settings for every project, including the root aggregate project */
 val BaseSettings = Seq(
-  organization := "com.tapad.sbt",
+  organization := "com.iofficecorp.sbt",
   licenses += ("BSD New", url("https://opensource.org/licenses/BSD-3-Clause")),
   scalaVersion := Dependencies.ScalaVersion
 )

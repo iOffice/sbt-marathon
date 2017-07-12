@@ -3,9 +3,9 @@ package sbtmarathon
 import sbt._
 
 object MarathonKeys {
-  val dockerRegistry = settingKey[String]("Docker registry")
-  val marathonApplicationId = settingKey[String]("The Marathon application identifier")
-  val marathonServiceUrl = settingKey[String]("The Marathon service URL")
+  val dockerRegistry = taskKey[String]("Docker registry")
+  val marathonApplicationId = taskKey[String]("The Marathon application identifier")
+  val marathonServiceUrl = taskKey[String]("The Marathon service URL")
   val marathonServiceRequest = taskKey[String]("The Marathon service request entity")
   val marathonService = taskKey[MarathonService]("The Marathon API service instance")
   val marathonServiceStart = taskKey[Unit]("Start instance(s) of an application")

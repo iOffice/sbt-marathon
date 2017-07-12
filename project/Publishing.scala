@@ -2,17 +2,24 @@ import sbt._
 import sbt.Keys._
 import sbtrelease.ReleasePlugin.autoImport._
 import sbtrelease.ReleaseStateTransformations._
-import bintray.BintrayKeys._
 
 object Publishing {
 
+  val artifactoryUserName = Def.task(sys.props.get("iOfficeBartifactoryUsername"))
+  val artifactoryPassword = Def.task(sys.props.get("iOfficeBartifactoryPassword"))
+  val artifactoryHost = "http://bartifactory.corp.iofficecorp.com:8081"
+
   val PublishSettings = Seq(
-    autoAPIMappings := true,
-    bintrayOrganization := Some("tapad-oss"),
-    pomIncludeRepository := { _ => false },
     publishArtifact in Test := false,
     publishArtifact in (Compile, packageDoc) := true,
-    publishArtifact in (Compile, packageSrc) := true
+    publishArtifact in (Compile, packageSrc) := true,
+    publishTo := Some(Resolver.url("ioffice-sbt-plugins", new URL(s"$artifactoryHost/artifactory/sbt-plugins/"))(Resolver.ivyStylePatterns)),
+    credentials += Credentials(
+      "Artifactory",
+      "localhost",
+      artifactoryUserName.value.getOrElse("no userame set"),
+      artifactoryPassword.value.getOrElse("no password set")
+    )
   )
 
   val CrossPublishSettings = PublishSettings ++ Seq(
@@ -28,30 +35,10 @@ object Publishing {
     publishTo := None
   )
 
-  val PluginPublishSettings = PublishSettings ++ Seq(
-    bintrayRepository := "sbt-plugins"
-  )
+  val PluginPublishSettings = PublishSettings ++ Seq()
 
   val LibraryPublishSettings = CrossPublishSettings ++ Seq(
-    bintrayRepository := "maven",
-    bintrayPackage := "sbt-marathon-libs",
-    publishMavenStyle := true,
-    pomIncludeRepository := { _ => false },
-    homepage := Some(new URL("https://github.com/Tapad/sbt-marathon")),
-    pomExtra := {
-      <developers>
-        <developer>
-          <id>jeffreyolchovy</id>
-          <name>Jeffrey Olchovy</name>
-          <email>jeffo@tapad.com</email>
-          <url>https://github.com/jeffreyolchovy</url>
-        </developer>
-      </developers>
-      <scm>
-        <url>https://github.com/Tapad/sbt-marathon</url>
-        <connection>scm:git:git://github.com/Tapad/sbt-marathon.git</connection>
-      </scm>
-    }
+    publishTo := Some("ioffice-sbt-plugins" at s"$artifactoryHost/artifactory/sbt-plugins")
   )
 
   val ReleaseSettings = Seq(
