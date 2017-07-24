@@ -14,6 +14,7 @@ object Publishing {
     publishArtifact in (Compile, packageDoc) := true,
     publishArtifact in (Compile, packageSrc) := true,
     publishTo := Some(Resolver.url("ioffice-sbt-plugins", new URL(s"$artifactoryHost/artifactory/sbt-plugins/"))(Resolver.ivyStylePatterns)),
+    publishMavenStyle := false,
     credentials += Credentials(
       "Artifactory",
       "localhost",
@@ -38,7 +39,8 @@ object Publishing {
   val PluginPublishSettings = PublishSettings ++ Seq()
 
   val LibraryPublishSettings = CrossPublishSettings ++ Seq(
-    publishTo := Some("ioffice-sbt-plugins" at s"$artifactoryHost/artifactory/sbt-plugins")
+    publishTo := Some("ioffice-sbt-plugins" at s"$artifactoryHost/artifactory/sbt-plugins"),
+    publishMavenStyle := true
   )
 
   val ReleaseSettings = Seq(
